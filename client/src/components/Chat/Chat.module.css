@@ -1,0 +1,39 @@
+.messageItem {
+  width: 55%;
+  margin: 8px;
+  padding: 12px 8px;
+  word-break: break-word;
+  border-radius: 4px;
+  color: white;
+  font-family: Courier New, Courier, monospace;
+  font-weight: 400;
+}
+
+.myMessage {
+  background-color: rgb(0, 132, 255);
+  margin-left: auto;
+}
+
+.receivedMessage {
+  background-color: rgb(228, 230, 235);
+  color: rgb(5, 5, 5);
+  margin-right: auto;
+}
+
+.container {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+}
+
+.actionsContainer {
+  display: flex;
+}
+
+ol li {
+  list-style-type: none;
+}

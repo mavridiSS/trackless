@@ -1,0 +1,37 @@
+.inputRoot {
+  color: rgba(0, 0, 0, 0.87);
+  cursor: text;
+  display: inline-flex;
+  position: relative;
+  font-size: 1rem;
+  box-sizing: border-box;
+  align-items: center;
+  font-family: Courier New, Courier, monospace;
+  font-weight: 400;
+  line-height: 1.1875em;
+  width: 100%;
+  padding: 0;
+}
+
+input:focus {
+  outline: 0;
+}
+
+.input {
+  font: inherit;
+  color: currentColor;
+  width: 100%;
+  border: 0;
+  height: 1.1875em;
+  margin: 0;
+  display: block;
+  min-width: 0;
+  background: none;
+  box-sizing: content-box;
+  animation-name: mui-auto-fill-cancel;
+  -webkit-tap-highlight-color: transparent;
+  padding: 8px 18px 4px;
+  line-height: normal;
+  border-radius: 24px;
+  background-color: #f1f3f4;
+}
