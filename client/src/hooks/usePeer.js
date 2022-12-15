@@ -28,9 +28,9 @@ const usePeer = (userName, roomId, socket, emit) => {
   const call = (user) => {
     setIsCalling(true);
     const getUserMedia = (
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia
+      navigator.mediaDevices.getUserMedia ||
+      navigator.mediaDevices.webkitGetUserMedia ||
+      navigator.mediaDevices.mozGetUserMedia
     ).bind(navigator);
     getUserMedia(
       { video: true, audio: true },
@@ -65,9 +65,9 @@ const usePeer = (userName, roomId, socket, emit) => {
 
   const acceptCall = () => {
     const getUserMedia = (
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia
+      navigator.mediaDevices.getUserMedia ||
+      navigator.mediaDevices.webkitGetUserMedia ||
+      navigator.mediaDevices.mozGetUserMedia
     ).bind(navigator);
 
     getUserMedia(
