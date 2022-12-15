@@ -25,78 +25,68 @@ const usePeer = (userName, roomId, socket, emit) => {
     }
   }, [socket]);
 
-  const call = (user) => {
+  const call = async (user) => {
     setIsCalling(true);
-    const getUserMedia = (
-      navigator.mediaDevices.getUserMedia ||
-      navigator.mediaDevices.webkitGetUserMedia ||
-      navigator.mediaDevices.mozGetUserMedia
-    ).bind(navigator);
-    getUserMedia(
-      { video: true, audio: true },
-      function (stream) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setPeers((peers) => {
+        return [...peers, { peer: userName, stream }];
+      });
+      const peer = new Peer({ initiator: true, trickle: false, stream });
+
+      peer.on("signal", (signal) => {
+        console.log(`I am going to call ${user}!`);
+        emit("call", { signal, from: userName, roomId });
+      });
+
+      peer.on("stream", (stream) => {
+        console.log("Streaming from call");
         setPeers((peers) => {
-          return [...peers, { peer: userName, stream }];
+          return [...peers, { peer: user, stream }];
         });
-        const peer = new Peer({ initiator: true, trickle: false, stream });
+      });
 
-        peer.on("signal", (signal) => {
-          console.log(`I am going to call ${user}!`);
-          emit("call", { signal, from: userName, roomId });
-        });
-
-        peer.on("stream", (stream) => {
-          console.log("Streaming from call");
-          setPeers((peers) => {
-            return [...peers, { peer: user, stream }];
-          });
-        });
-
-        socket.on("call-accepted", (signal) => {
-          setIsCallAccepted(true);
-          peer.signal(signal);
-        });
-      },
-      function (err) {
-        console.log("Failed to get local stream", err);
-      }
-    );
+      socket.on("call-accepted", (signal) => {
+        setIsCallAccepted(true);
+        peer.signal(signal);
+      });
+    } catch (err) {
+      console.log("Failed to get local stream", err);
+    }
   };
 
-  const acceptCall = () => {
-    const getUserMedia = (
-      navigator.mediaDevices.getUserMedia ||
-      navigator.mediaDevices.webkitGetUserMedia ||
-      navigator.mediaDevices.mozGetUserMedia
-    ).bind(navigator);
+  const acceptCall = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
 
-    getUserMedia(
-      { video: true, audio: true },
-      function (stream) {
-        setIsCallAccepted(true);
-        const peer = new Peer({
-          initiator: false,
-          trickle: false,
-          stream,
+      setIsCallAccepted(true);
+      const peer = new Peer({
+        initiator: false,
+        trickle: false,
+        stream,
+      });
+
+      peer.on("signal", (data) => {
+        emit("accept-call", { signal: data, roomId });
+      });
+
+      peer.on("stream", (stream) => {
+        console.log("Streaming from accepted call");
+        setPeers((peers) => {
+          return [...peers, { peer: caller.from, stream }];
         });
+      });
 
-        peer.on("signal", (data) => {
-          emit("accept-call", { signal: data, roomId });
-        });
-
-        peer.on("stream", (stream) => {
-          console.log("Streaming from accepted call");
-          setPeers((peers) => {
-            return [...peers, { peer: caller.from, stream }];
-          });
-        });
-
-        peer.signal(caller.signal);
-      },
-      function (err) {
-        console.log("Failed to get local stream", err);
-      }
-    );
+      peer.signal(caller.signal);
+    } catch (err) {
+      console.log("Failed to get local stream", err);
+    }
   };
 
   const rejectCall = () => {
