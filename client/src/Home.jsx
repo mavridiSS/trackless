@@ -14,7 +14,7 @@ export default function Home() {
 
   const handleCreateRoom = async () => {
     const room = generateName();
-    const response = await fetch("/create-room", {
+    const response = await fetch(process.env.SOCKET_URL + "/create-room", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ room }),
