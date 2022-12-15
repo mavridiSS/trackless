@@ -14,11 +14,15 @@ export default function Home() {
 
   const handleCreateRoom = async () => {
     const room = generateName();
-    const response = await fetch(process.env.SOCKET_URL + "/create-room", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ room }),
-    });
+
+    const response = await fetch(
+      process.env.REACT_APP_SOCKET_URL + "/create-room",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ room }),
+      }
+    );
     const roomId = await response.text();
     history.push(
       { pathname: `/r/${roomId}` },

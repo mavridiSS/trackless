@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
 const socketio = require("socket.io");
+const cors = require("cors");
 const port = process.env.PORT || 5000;
 const router = express.Router();
 
@@ -19,12 +20,17 @@ const app = express();
 const server = http.Server(app);
 const io = socketio(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://trackless.onrender.com"],
   },
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 router.post("/create-room", (request, response) => {
   const roomId = request.body.room;
